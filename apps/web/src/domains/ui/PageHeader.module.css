@@ -1,0 +1,27 @@
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--so-spacing-lg);
+  margin-bottom: var(--so-spacing-lg);
+}
+
+.title {
+  margin: 0;
+  color: var(--so-color-title);
+  font-size: 28px;
+  line-height: 1.15;
+}
+
+.description {
+  max-width: 62ch;
+  margin-top: 8px;
+  line-height: 1.45;
+  color: var(--so-color-muted);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--so-spacing-sm);
+}

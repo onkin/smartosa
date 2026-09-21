@@ -1,0 +1,5 @@
+# Copy to go2rtc.yaml (gitignored). Do not put camera passwords in git.
+api:
+  listen: ':1984'
+  origin: '*'
+# Prefer subtype=1 and #media=video#timeout=60 on each RTSP source.

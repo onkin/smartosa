@@ -1,0 +1,16 @@
+{
+  "name": "@smartosa/brand",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/brand/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "pnpm typecheck",
+        "cwd": "packages/brand"
+      }
+    }
+  }
+}

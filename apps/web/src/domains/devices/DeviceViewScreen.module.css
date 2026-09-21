@@ -1,0 +1,92 @@
+.page {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  flex: 1 1 auto;
+  gap: var(--so-spacing-lg);
+  min-height: 0;
+  width: 100%;
+}
+
+.page > :first-child {
+  margin-bottom: 0;
+}
+
+.frame {
+  position: relative;
+  container-type: size;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: var(--so-spacing-lg);
+  min-width: 0;
+  min-height: 0;
+}
+
+.side {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  border-radius: var(--so-radius-md);
+  background: rgba(0, 0, 0, 0.62);
+  color: #fff;
+  font-size: 13px;
+  pointer-events: none;
+}
+
+.spinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-top-color: var(--so-color-primary-strong);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.video {
+  position: relative;
+  justify-self: start;
+  width: fit-content;
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.frame:fullscreen {
+  box-sizing: border-box;
+  padding: var(--so-spacing-lg);
+  background: #0d1117;
+}
+
+.fullscreen {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  z-index: 4;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 36px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: var(--so-radius-md);
+  background: rgba(0, 0, 0, 0.62);
+  color: #fff;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.iconButton {
+  width: 40px;
+  padding: 0;
+}

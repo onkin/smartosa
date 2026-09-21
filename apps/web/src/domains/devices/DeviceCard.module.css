@@ -1,0 +1,22 @@
+.meta {
+  display: grid;
+  gap: 6px;
+}
+
+.meta small {
+  color: var(--so-color-muted);
+  font-size: 12px;
+}
+
+.meta a {
+  color: var(--so-color-title);
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.external {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--so-color-primary-strong);
+}

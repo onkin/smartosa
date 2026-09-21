@@ -1,0 +1,16 @@
+.fallback {
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  width: 100%;
+  height: 100%;
+  gap: 8px;
+  padding: 16px;
+  color: var(--so-color-muted);
+  text-align: center;
+  background: #0d1117;
+}
+
+.fallback a {
+  color: var(--so-color-primary-strong);
+}

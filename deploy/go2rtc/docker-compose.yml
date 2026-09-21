@@ -1,0 +1,14 @@
+services:
+  go2rtc:
+    image: alexxit/go2rtc:latest
+    container_name: smartosa-go2rtc
+    ports:
+      - '1984:1984'
+      - '8554:8554'
+      - '8555:8555'
+      - '8555:8555/udp'
+    environment:
+      TZ: Europe/Moscow
+    volumes:
+      - ./config:/config
+    restart: unless-stopped

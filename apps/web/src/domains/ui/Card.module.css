@@ -1,0 +1,11 @@
+.card {
+  display: grid;
+  align-content: start;
+  gap: var(--so-spacing-lg);
+  min-width: 0;
+  padding: var(--so-spacing-xl);
+  border: 1px solid var(--so-color-border);
+  border-radius: var(--so-radius-lg);
+  background: var(--so-color-card);
+  box-shadow: var(--so-shadow-card);
+}

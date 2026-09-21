@@ -1,0 +1,13 @@
+.empty {
+  display: grid;
+  gap: var(--so-spacing-md);
+  padding: var(--so-spacing-xl);
+  border: 1px dashed var(--so-color-border);
+  border-radius: var(--so-radius-lg);
+  color: var(--so-color-muted);
+  text-align: center;
+}
+
+.empty strong {
+  color: var(--so-color-title);
+}

@@ -1,0 +1,94 @@
+.root {
+  position: relative;
+  margin-top: 6px;
+}
+
+.trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  max-width: 100%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--so-color-text);
+  font: inherit;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.trigger span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.trigger:hover {
+  color: var(--so-color-title);
+}
+
+.menu {
+  position: absolute;
+  z-index: 6;
+  top: calc(100% + 8px);
+  left: 0;
+  display: grid;
+  gap: 4px;
+  width: max(100%, 220px);
+  padding: 8px;
+  border: 1px solid var(--so-color-border);
+  border-radius: var(--so-radius-md);
+  background: var(--so-color-card);
+  box-shadow: var(--so-shadow-card);
+}
+
+.menu > button {
+  display: flex;
+  align-items: center;
+  min-height: 36px;
+  padding: 0 10px;
+  border: 0;
+  border-radius: var(--so-radius-sm);
+  background: transparent;
+  color: var(--so-color-title);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.menu > button:hover,
+.current {
+  background: var(--so-color-primary-soft);
+}
+
+.add {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 6px;
+  margin-top: 4px;
+  padding-top: 8px;
+  border-top: 1px solid var(--so-color-border);
+}
+
+.add input {
+  min-width: 0;
+  min-height: 36px;
+  padding: 0 10px;
+  border: 1px solid var(--so-color-border);
+  border-radius: var(--so-radius-sm);
+  background: #171c24;
+  color: var(--so-color-title);
+  font: inherit;
+}
+
+.add button {
+  min-height: 36px;
+  padding: 0 10px;
+  border: 0;
+  border-radius: var(--so-radius-sm);
+  background: var(--so-color-primary);
+  color: #081018;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}

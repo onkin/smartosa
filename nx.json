@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json.schemastore.org/nx.json",
+  "npmScope": "smartosa",
+  "defaultProject": "web",
+  "workspaceLayout": {
+    "appsDir": "apps",
+    "libsDir": "packages"
+  },
+  "affected": {
+    "defaultBase": "main"
+  },
+  "namedInputs": {
+    "default": ["{projectRoot}/**/*", "sharedGlobals"],
+    "sharedGlobals": ["{workspaceRoot}/tsconfig.base.json"]
+  }
+}

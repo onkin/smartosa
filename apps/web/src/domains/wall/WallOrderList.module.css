@@ -1,0 +1,103 @@
+.wrap {
+  display: grid;
+  gap: var(--so-spacing-lg);
+  min-width: 0;
+}
+
+.wrap h3 {
+  margin: 0 0 8px;
+  color: var(--so-color-title);
+  font-size: 15px;
+}
+
+.wrap p {
+  margin: 0;
+  color: var(--so-color-muted);
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.order,
+.pool {
+  display: grid;
+  gap: 8px;
+  margin: 8px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.order li,
+.pool li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  min-height: 44px;
+  padding: 6px 8px 6px 12px;
+  border: 1px solid var(--so-color-border);
+  border-radius: var(--so-radius-md);
+  background: var(--so-color-board);
+}
+
+.dragging {
+  opacity: 0.55;
+}
+
+.meta {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  color: var(--so-color-title);
+}
+
+.meta strong {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.order strong,
+.pool strong {
+  color: var(--so-color-title);
+}
+
+.order small,
+.pool small {
+  color: var(--so-color-muted);
+  font-size: 12px;
+}
+
+.handle,
+.remove,
+.pool button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: var(--so-radius-md);
+  background: transparent;
+  color: var(--so-color-title);
+  cursor: grab;
+}
+
+.handle {
+  width: 32px;
+  height: 32px;
+  touch-action: none;
+}
+
+.remove,
+.pool button {
+  min-height: 32px;
+  padding: 0 8px;
+  cursor: pointer;
+  color: var(--so-color-primary-strong);
+}
+
+.handle:hover,
+.remove:hover,
+.pool button:hover {
+  background: var(--so-color-primary-soft);
+}

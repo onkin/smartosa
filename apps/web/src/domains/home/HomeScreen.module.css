@@ -1,0 +1,92 @@
+.popular h2,
+.section h2 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--so-color-title);
+  font-size: 18px;
+  line-height: 1.3;
+}
+
+.visits {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.visits li {
+  padding: 4px 0 12px;
+  border-bottom: 1px solid var(--so-color-border);
+}
+
+.visit {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-width: 0;
+  color: inherit;
+}
+
+.visit {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+}
+
+.popularText {
+  min-width: 0;
+}
+
+.popularText strong {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.count {
+  color: var(--so-color-muted);
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.visit:hover strong {
+  color: var(--so-color-primary-strong);
+}
+
+.visits li:last-child {
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
+.visits strong {
+  color: var(--so-color-title);
+}
+
+.visits span,
+.visits time {
+  color: var(--so-color-muted);
+  font-size: 13px;
+}
+
+.section {
+  display: grid;
+  gap: var(--so-spacing-lg);
+  margin-top: var(--so-spacing-2xl);
+}
+
+.sectionHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--so-spacing-md);
+}
+
+.sectionHead div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--so-spacing-sm);
+}
+

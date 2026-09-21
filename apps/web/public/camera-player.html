@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Камера</title>
+    <style>
+      html,
+      body,
+      video-stream {
+        display: block;
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        overflow: hidden;
+        background: #0d1117;
+      }
+      video-stream video {
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: contain;
+        background: #0d1117;
+      }
+      video-stream .info {
+        display: none !important;
+      }
+    </style>
+  </head>
+  <body>
+    <script type="module">
+      const params = new URLSearchParams(location.search);
+      const src = params.get('src') ?? '';
+      const rawBase = params.get('go2rtc') ?? 'http://127.0.0.1:1984';
+
+      if (!/^[A-Za-z0-9._-]+$/.test(src)) {
+        throw new Error('bad stream name');
+      }
+
+      let go2rtc;
+      try {
+        go2rtc = new URL(rawBase);
+      } catch {
+        throw new Error('bad go2rtc url');
+      }
+      if (go2rtc.protocol !== 'http:' && go2rtc.protocol !== 'https:') {
+        throw new Error('bad go2rtc url');
+      }
+
+      const base = go2rtc.origin + go2rtc.pathname.replace(/\/$/, '');
+      await import(`${base}/video-stream.js`);
+
+      const requested = params.get('fit');
+      const fit = requested === 'fill' || requested === 'contain' || requested === 'cover' ? requested : 'contain';
+      const player = document.createElement('video-stream');
+      player.background = true;
+      player.media = 'video';
+      player.mode = 'webrtc,mse,mjpeg';
+      document.body.appendChild(player);
+      player.src = new URL(`api/ws?src=${encodeURIComponent(src)}`, `${base}/`);
+
+      const mute = () => {
+        const video = player.video ?? player.querySelector('video');
+        if (!video) {
+          return;
+        }
+        video.controls = false;
+        video.muted = true;
+        video.playsInline = true;
+        video.style.objectFit = fit;
+        if (video.dataset.smartosaBound) {
+          return;
+        }
+        video.dataset.smartosaBound = '1';
+        const reportPlaying = () => {
+          if (!(video.videoWidth > 0) || window.parent === window) {
+            return;
+          }
+          if (!video.dataset.smartosaPlaying) {
+            video.dataset.smartosaPlaying = '1';
+            window.parent.postMessage({src, type: 'smartosa-video-playing'}, '*');
+          }
+          if (fit === 'contain' && !video.dataset.smartosaSize) {
+            video.dataset.smartosaSize = '1';
+            window.parent.postMessage(
+              {height: video.videoHeight, src, type: 'smartosa-video-size', width: video.videoWidth},
+              '*',
+            );
+          }
+        };
+        video.addEventListener('loadedmetadata', reportPlaying);
+        video.addEventListener('playing', reportPlaying);
+        video.addEventListener('resize', reportPlaying);
+        reportPlaying();
+      };
+
+      const observer = new MutationObserver(() => {
+        mute();
+        if (player.video || player.querySelector('video')) {
+          observer.disconnect();
+        }
+      });
+      observer.observe(player, {childList: true});
+      mute();
+    </script>
+  </body>
+</html>

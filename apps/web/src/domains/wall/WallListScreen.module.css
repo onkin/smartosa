@@ -1,0 +1,64 @@
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: var(--so-spacing-lg);
+}
+
+.tile {
+  position: relative;
+  min-width: 0;
+  border: 1px solid var(--so-color-border);
+  border-radius: var(--so-radius-lg);
+  background: var(--so-color-card);
+  box-shadow: var(--so-shadow-card);
+}
+
+.tile:hover {
+  border-color: var(--so-color-primary);
+}
+
+.open {
+  display: grid;
+  gap: 8px;
+  padding: var(--so-spacing-xl);
+  padding-right: 52px;
+  color: inherit;
+}
+
+.grid h2 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  color: var(--so-color-title);
+  font-size: 18px;
+  line-height: 1.3;
+}
+
+.open:hover h2 {
+  color: var(--so-color-primary-strong);
+}
+
+.grid p {
+  margin: 0;
+  color: var(--so-color-muted);
+  line-height: 1.45;
+}
+
+.settings {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--so-radius-md);
+  color: var(--so-color-title);
+}
+
+.settings:hover {
+  background: var(--so-color-primary-soft);
+}

@@ -1,0 +1,26 @@
+.mark,
+.iconOnly {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  color: var(--so-color-muted);
+  line-height: 1;
+}
+
+.mark svg,
+.iconOnly svg {
+  display: block;
+  flex: none;
+}
+
+.iconOnly {
+  color: inherit;
+}
+
+.mark span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

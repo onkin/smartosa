@@ -1,0 +1,41 @@
+.gate {
+  display: grid;
+  min-height: 100vh;
+  place-items: center;
+  padding: var(--so-spacing-xl);
+  background: var(--so-color-background);
+}
+
+.card {
+  display: grid;
+  width: min(420px, 100%);
+  gap: var(--so-spacing-lg);
+  padding: var(--so-spacing-xl);
+  border: 1px solid var(--so-color-border);
+  border-radius: var(--so-radius-lg);
+  background: var(--so-color-card);
+}
+
+.card h1 {
+  margin: 0;
+  color: var(--so-color-title);
+}
+
+.card p,
+.card input {
+  color: var(--so-color-text);
+}
+
+.card input {
+  min-height: 44px;
+  padding: 0 12px;
+  border: 1px solid var(--so-color-border);
+  border-radius: var(--so-radius-md);
+  background: #171c24;
+  color: var(--so-color-title);
+  font: inherit;
+}
+
+.error {
+  color: var(--so-color-danger);
+}

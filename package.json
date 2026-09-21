@@ -1,0 +1,38 @@
+{
+  "name": "smartosa",
+  "private": true,
+  "scripts": {
+    "nx": "NX_DAEMON=false NX_ISOLATE_PLUGINS=false nx",
+    "lint": "pnpm nx run-many --target=lint --all --parallel",
+    "typecheck": "pnpm nx run-many --target=typecheck --all --parallel",
+    "test": "pnpm nx run-many --target=test --all --parallel",
+    "web:dev": "pnpm --filter web dev",
+    "web:build": "pnpm --filter web build && rm -rf dist/apps/web && mkdir -p dist/apps/web && cp -R apps/web/out/. dist/apps/web/",
+    "web:start": "pnpm --filter web start",
+    "web:nx": "pnpm nx run web:serve",
+    "go2rtc:up": "sh deploy/go2rtc/up.sh",
+    "go2rtc:down": "sh deploy/go2rtc/down.sh",
+    "go2rtc:logs": "sh -c 'if command -v docker >/dev/null; then docker compose -f deploy/go2rtc/docker-compose.yml logs -f; else tail -f deploy/go2rtc/bin/go2rtc.log; fi'"
+  },
+  "workspaces": {
+    "packages": [
+      "apps/*",
+      "packages/*"
+    ]
+  },
+  "packageManager": "pnpm@8.15.0",
+  "devDependencies": {
+    "@types/jest": "^29.5.14",
+    "@types/node": "^20.17.30",
+    "jest": "^29.7.0",
+    "nx": "21.3.11",
+    "ts-jest": "^29.2.5",
+    "typescript": "~5.8.2"
+  },
+  "pnpm": {
+    "overrides": {
+      "react": "19.2.3",
+      "react-dom": "19.2.3"
+    }
+  }
+}

@@ -1,0 +1,40 @@
+.page {
+  display: grid;
+  align-content: start;
+}
+
+.grid2,
+.custom,
+.plus {
+  display: grid;
+  align-items: start;
+  align-content: start;
+  gap: 12px;
+}
+
+.grid2 {
+  grid-template-columns: 1fr 1fr;
+}
+
+.custom {
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
+}
+
+.plus {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.stack {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 160px), 1fr));
+  align-content: start;
+  gap: 12px;
+  min-width: 0;
+}
+
+@media (max-width: 800px) {
+  .grid2,
+  .plus {
+    grid-template-columns: 1fr;
+  }
+}
