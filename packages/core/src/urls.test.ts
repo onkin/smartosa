@@ -3,6 +3,7 @@ import {
   browserRtspSource,
   cameraPreviewUrl,
   cameraWebUrls,
+  go2rtcBaseUrl,
   go2rtcPlayerUrl,
   go2rtcVideoUrl,
   hasEmbeddedUserinfo,
@@ -13,6 +14,15 @@ import {
 } from './urls';
 
 describe('urls', () => {
+  it('follows the page host when go2rtc is saved as localhost', () => {
+    const previous = global.window;
+    global.window = {location: {hostname: '192.168.1.20'}} as unknown as Window & typeof globalThis.window;
+    expect(
+      go2rtcBaseUrl({lanHost: '', wanHost: '', go2rtcUrl: 'http://127.0.0.1:1984'}),
+    ).toBe('http://192.168.1.20:1984');
+    global.window = previous;
+  });
+
   it('substitutes lan and wan hosts', () => {
     expect(
       resolveHostTemplate('http://{lan}:8080/snap http://{wan}:80/ui', {

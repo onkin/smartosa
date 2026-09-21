@@ -5,7 +5,23 @@ export function resolveHostTemplate(value: string, settings: NetworkSettings): s
 }
 
 export function go2rtcBaseUrl(settings: NetworkSettings): string {
-  return (settings.go2rtcUrl || 'http://127.0.0.1:1984').replace(/\/$/, '');
+  const raw = (settings.go2rtcUrl || 'http://127.0.0.1:1984').replace(/\/$/, '');
+  if (typeof window === 'undefined') {
+    return raw;
+  }
+  try {
+    const url = new URL(raw);
+    const pageHost = window.location.hostname;
+    const pointsHere = url.hostname === '127.0.0.1' || url.hostname === 'localhost';
+    const pageIsLocal = pageHost === '127.0.0.1' || pageHost === 'localhost' || pageHost === '';
+    if (pointsHere && !pageIsLocal) {
+      url.hostname = pageHost;
+      return url.toString().replace(/\/$/, '');
+    }
+  } catch {
+    return raw;
+  }
+  return raw;
 }
 
 export function hasEmbeddedUserinfo(url: string): boolean {
