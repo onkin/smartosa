@@ -1,10 +1,10 @@
 # Smartosa Web
 
-Next.js 15 панель. Статический экспорт, данные в IndexedDB.
+Next.js 15 panel. Static export, data in IndexedDB.
 
 ```bash
 pnpm web:dev    # http://localhost:4300
 pnpm web:build  # dist/apps/web
 ```
 
-Динамические id устройств и стен передаются query-параметром (`/devices/edit?id=`), чтобы `output: 'export'` работал без серверных маршрутов.
+Device and wall ids are query parameters (`/devices/edit?id=`) so `output: 'export'` does not need server routes.

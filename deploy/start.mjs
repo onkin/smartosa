@@ -18,7 +18,7 @@ function fail(message) {
 function run(command, args) {
   const result = spawnSync(command, args, {cwd: root, stdio: 'inherit'});
   if (result.status !== 0) {
-    fail(`Команда остановилась: ${command} ${args.join(' ')}`);
+    fail(`Command stopped: ${command} ${args.join(' ')}`);
   }
 }
 
@@ -29,7 +29,7 @@ function pnpmCommand() {
   }
   const corepack = spawnSync('corepack', ['--version'], {stdio: 'ignore'});
   if (corepack.status !== 0) {
-    fail('Не найден pnpm. Поставьте Node.js 20 с https://nodejs.org и запустите ещё раз.');
+    fail('pnpm was not found. Install Node.js 20 from https://nodejs.org and run this again.');
   }
   run('corepack', ['enable']);
   run('corepack', ['prepare', 'pnpm@8.15.0', '--activate']);
@@ -81,13 +81,13 @@ function fileFor(urlPath) {
 
 const major = Number(process.versions.node.split('.')[0]);
 if (major < 20) {
-  fail(`Нужен Node.js 20 или новее, сейчас ${process.version}. https://nodejs.org`);
+  fail(`Node.js 20 or newer is required. This machine has ${process.version}. https://nodejs.org`);
 }
 
 const [pnpm] = pnpmCommand();
-console.log('Ставлю зависимости…');
+console.log('Installing dependencies…');
 run(pnpm, ['install']);
-console.log('Запускаю go2rtc…');
+console.log('Starting go2rtc…');
 if (process.platform === 'win32') {
   const binDir = path.join(root, 'deploy', 'go2rtc', 'bin');
   const exe = path.join(binDir, 'go2rtc.exe');
@@ -104,7 +104,7 @@ if (process.platform === 'win32') {
 }
 
 if (!existsSync(path.join(webRoot, 'index.html'))) {
-  console.log('Собираю панель…');
+  console.log('Building the panel…');
   run(pnpm, ['web:build']);
 }
 
@@ -117,7 +117,7 @@ const server = createServer((request, response) => {
   const file = fileFor(request.url ?? '/');
   if (!file) {
     response.writeHead(404);
-    response.end('Нет файла');
+    response.end('File not found');
     return;
   }
   response.writeHead(200, {'content-type': types[path.extname(file)] ?? 'application/octet-stream'});
@@ -126,12 +126,12 @@ const server = createServer((request, response) => {
 
 server.listen(port, '0.0.0.0', () => {
   console.log('');
-  console.log(`Панель на этом компьютере: http://127.0.0.1:${port}`);
+  console.log(`Panel on this computer:  http://127.0.0.1:${port}`);
   for (const address of lanAddresses()) {
-    console.log(`С телефона в той же сети:   http://${address}:${port}`);
+    console.log(`Phone on the same Wi-Fi: http://${address}:${port}`);
   }
   console.log('go2rtc: http://127.0.0.1:1984');
   console.log('');
-  console.log('Камеры и стены переносятся файлом из Настройки → Скачать JSON, затем Импорт на этом компьютере.');
-  console.log('Окно не закрывайте: вместе с ним остановится панель. go2rtc останется, его гасит pnpm go2rtc:down.');
+  console.log('Cameras and walls move with Settings → Download JSON, then Import JSON on this computer.');
+  console.log('Keep this window open. Closing it stops the panel. go2rtc keeps running until pnpm go2rtc:down.');
 });
