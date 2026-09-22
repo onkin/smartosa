@@ -8,24 +8,20 @@ A home dashboard for IP cameras and other devices on the local network. The pane
 | [`packages/core`](./packages/core) | Devices, walls, visits, and storage, without React |
 | [`packages/brand`](./packages/brand) | Dark theme and CSS variables |
 
-## Download
+## Give this to someone else
 
-GitHub already packs the repository. You do not need a separate installer archive.
+Send them this file: [Download ZIP](https://github.com/onkin/smartosa/archive/refs/heads/main.zip). GitHub builds that archive from the repository. There is no separate installer, and camera passwords are not in it.
 
-- [Download ZIP](https://github.com/onkin/smartosa/archive/refs/heads/main.zip)
-- Or open the repository and choose **Code → Download ZIP**
+They unzip the folder and double-click one file:
 
-Unzip the folder, install [Node.js 20](https://nodejs.org), then start the panel with the launcher below. `git clone https://github.com/onkin/smartosa.git` is the same source if Git is already installed.
+- macOS: `Start.command`. If the system refuses to open it, right-click the file and choose Open.
+- Windows: `Start.bat`.
 
-## Install on another computer
+The first start needs internet. It downloads Node.js, project files, and go2rtc, then opens the panel in the browser. That can take several minutes. The black window must stay open.
 
-1. Install [Node.js 20](https://nodejs.org) or newer.
-2. macOS: double-click `Start.command`.
-3. Windows: double-click `Start.bat`.
+Also send your backup: **Settings → Download JSON** on your computer, **Settings → Import JSON** on theirs. That file holds the cameras. Do not send `deploy/go2rtc/config/go2rtc.yaml`.
 
-The window installs dependencies, starts go2rtc, builds the panel the first time, and serves it at <http://127.0.0.1:4300>. It also prints the address for a phone on the same Wi-Fi. Leave the window open. Closing it stops the panel.
-
-Cameras are not inside the download. On the old computer use **Settings → Download JSON**. On the new one use **Import JSON**. Do not copy `deploy/go2rtc/config/go2rtc.yaml`: that file holds camera passwords and is not in git.
+`git clone https://github.com/onkin/smartosa.git` is the same source if Git is already installed.
 
 ## Develop
 

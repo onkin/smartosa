@@ -124,14 +124,28 @@ const server = createServer((request, response) => {
   createReadStream(file).pipe(response);
 });
 
+function openPanel(url) {
+  if (process.platform === 'darwin') {
+    spawn('open', [url], {detached: true, stdio: 'ignore'}).unref();
+    return;
+  }
+  if (process.platform === 'win32') {
+    spawn('cmd', ['/c', 'start', '', url], {detached: true, stdio: 'ignore', windowsHide: true}).unref();
+    return;
+  }
+  spawn('xdg-open', [url], {detached: true, stdio: 'ignore'}).unref();
+}
+
 server.listen(port, '0.0.0.0', () => {
+  const localUrl = `http://127.0.0.1:${port}`;
   console.log('');
-  console.log(`Panel on this computer:  http://127.0.0.1:${port}`);
+  console.log(`Panel on this computer:  ${localUrl}`);
   for (const address of lanAddresses()) {
     console.log(`Phone on the same Wi-Fi: http://${address}:${port}`);
   }
   console.log('go2rtc: http://127.0.0.1:1984');
   console.log('');
-  console.log('Cameras and walls move with Settings → Download JSON, then Import JSON on this computer.');
-  console.log('Keep this window open. Closing it stops the panel. go2rtc keeps running until pnpm go2rtc:down.');
+  console.log('The browser should open by itself. Leave this window open. Closing it stops the panel.');
+  console.log('Cameras are added in Settings → Import JSON.');
+  openPanel(localUrl);
 });

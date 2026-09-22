@@ -20,3 +20,4 @@ out/
 apps/web/out/
 deploy/go2rtc/config/go2rtc.yaml
 deploy/go2rtc/bin/
+deploy/.node/
