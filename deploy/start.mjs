@@ -125,7 +125,7 @@ if (process.platform === 'win32') {
 
 if (!existsSync(path.join(webRoot, 'index.html'))) {
   console.log('Building the panel…');
-  runPnpm(['web:build']);
+  run(process.execPath, [path.join(root, 'deploy', 'build-web.mjs')]);
 }
 
 const server = createServer((request, response) => {
