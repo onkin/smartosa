@@ -15,25 +15,46 @@ function fail(message) {
   process.exit(1);
 }
 
-function run(command, args) {
-  const result = spawnSync(command, args, {cwd: root, stdio: 'inherit'});
+function run(command, args, extraEnv = {}) {
+  const result = spawnSync(command, args, {
+    cwd: root,
+    stdio: 'inherit',
+    env: {...process.env, ...extraEnv},
+    windowsHide: true,
+  });
+  if (result.error) {
+    fail(result.error.message);
+  }
   if (result.status !== 0) {
     fail(`Command stopped: ${command} ${args.join(' ')}`);
   }
 }
 
-function pnpmCommand() {
-  const found = spawnSync('pnpm', ['--version'], {stdio: 'ignore'});
-  if (found.status === 0) {
-    return ['pnpm'];
+function bundledTool(parts) {
+  const directory = path.dirname(process.execPath);
+  const candidates = [
+    path.join(directory, ...parts),
+    path.join(directory, '..', 'lib', ...parts),
+  ];
+  return candidates.find((candidate) => existsSync(candidate)) ?? null;
+}
+
+function runPnpm(args) {
+  const corepack = bundledTool(['node_modules', 'corepack', 'dist', 'corepack.js']);
+  if (corepack) {
+    run(process.execPath, [corepack, 'pnpm', ...args], {COREPACK_ENABLE_DOWNLOAD_PROMPT: '0'});
+    return;
   }
-  const corepack = spawnSync('corepack', ['--version'], {stdio: 'ignore'});
-  if (corepack.status !== 0) {
-    fail('pnpm was not found. Install Node.js 20 from https://nodejs.org and run this again.');
+  const pnpmJs = path.join(root, 'deploy', '.tools', 'node_modules', 'pnpm', 'bin', 'pnpm.cjs');
+  if (!existsSync(pnpmJs)) {
+    const npm = bundledTool(['node_modules', 'npm', 'bin', 'npm-cli.js']);
+    if (!npm) {
+      fail('This Node.js has no pnpm, corepack, or npm.');
+    }
+    console.log('Installing pnpm…');
+    run(process.execPath, [npm, 'install', 'pnpm@8.15.0', '--prefix', path.join(root, 'deploy', '.tools')]);
   }
-  run('corepack', ['enable']);
-  run('corepack', ['prepare', 'pnpm@8.15.0', '--activate']);
-  return ['pnpm'];
+  run(process.execPath, [pnpmJs, ...args]);
 }
 
 function lanAddresses() {
@@ -84,9 +105,8 @@ if (major < 20) {
   fail(`Node.js 20 or newer is required. This machine has ${process.version}. https://nodejs.org`);
 }
 
-const [pnpm] = pnpmCommand();
 console.log('Installing dependencies…');
-run(pnpm, ['install']);
+runPnpm(['install']);
 console.log('Starting go2rtc…');
 if (process.platform === 'win32') {
   const binDir = path.join(root, 'deploy', 'go2rtc', 'bin');
@@ -100,12 +120,12 @@ if (process.platform === 'win32') {
   ], {stdio: 'inherit'});
   spawn(exe, ['-config', config], {cwd: binDir, detached: true, stdio: 'ignore'}).unref();
 } else {
-  run(pnpm, ['go2rtc:up']);
+  runPnpm(['go2rtc:up']);
 }
 
 if (!existsSync(path.join(webRoot, 'index.html'))) {
   console.log('Building the panel…');
-  run(pnpm, ['web:build']);
+  runPnpm(['web:build']);
 }
 
 const server = createServer((request, response) => {

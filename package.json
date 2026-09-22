@@ -7,7 +7,7 @@
     "typecheck": "pnpm nx run-many --target=typecheck --all --parallel",
     "test": "pnpm nx run-many --target=test --all --parallel",
     "web:dev": "node deploy/dev.mjs",
-    "web:build": "pnpm --filter web build && rm -rf dist/apps/web && mkdir -p dist/apps/web && cp -R apps/web/out/. dist/apps/web/",
+    "web:build": "pnpm --filter web build && node deploy/copy-web.mjs",
     "web:start": "pnpm --filter web start",
     "web:nx": "pnpm nx run web:serve",
     "go2rtc:up": "sh deploy/go2rtc/up.sh",
