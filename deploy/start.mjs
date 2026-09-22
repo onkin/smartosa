@@ -108,20 +108,7 @@ if (major < 20) {
 console.log('Installing dependencies…');
 runPnpm(['install']);
 console.log('Starting go2rtc…');
-if (process.platform === 'win32') {
-  const binDir = path.join(root, 'deploy', 'go2rtc', 'bin');
-  const exe = path.join(binDir, 'go2rtc.exe');
-  const configDir = path.join(root, 'deploy', 'go2rtc', 'config');
-  const config = path.join(configDir, 'go2rtc.yaml');
-  spawnSync('powershell', [
-    '-NoProfile',
-    '-Command',
-    `New-Item -ItemType Directory -Force -Path '${binDir}','${configDir}' | Out-Null; if (-not (Test-Path '${config}')) { Copy-Item '${path.join(configDir, 'go2rtc.yaml.example')}' '${config}' }; if (-not (Test-Path '${exe}')) { $zip = '${path.join(binDir, 'go2rtc.zip')}'; Invoke-WebRequest -Uri 'https://github.com/AlexxIT/go2rtc/releases/latest/download/go2rtc_win64.zip' -OutFile $zip; Expand-Archive -Force $zip '${binDir}' }`,
-  ], {stdio: 'inherit'});
-  spawn(exe, ['-config', config], {cwd: binDir, detached: true, stdio: 'ignore'}).unref();
-} else {
-  runPnpm(['go2rtc:up']);
-}
+runPnpm(['go2rtc:up']);
 
 if (!existsSync(path.join(webRoot, 'index.html'))) {
   console.log('Building the panel…');
@@ -145,15 +132,8 @@ const server = createServer((request, response) => {
 });
 
 function openPanel(url) {
-  if (process.platform === 'darwin') {
-    spawn('open', [url], {detached: true, stdio: 'ignore'}).unref();
-    return;
-  }
-  if (process.platform === 'win32') {
-    spawn('cmd', ['/c', 'start', '', url], {detached: true, stdio: 'ignore', windowsHide: true}).unref();
-    return;
-  }
-  spawn('xdg-open', [url], {detached: true, stdio: 'ignore'}).unref();
+  const command = process.platform === 'darwin' ? 'open' : 'xdg-open';
+  spawn(command, [url], {detached: true, stdio: 'ignore'}).unref();
 }
 
 server.listen(port, '0.0.0.0', () => {

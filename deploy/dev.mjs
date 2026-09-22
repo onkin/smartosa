@@ -9,7 +9,6 @@ const discover = listenDiscover(4310);
 const child = spawn('pnpm', ['--filter', 'web', 'dev'], {
   cwd: root,
   stdio: 'inherit',
-  shell: process.platform === 'win32',
 });
 
 function stop(signal) {

@@ -12,10 +12,7 @@ A home dashboard for IP cameras and other devices on the local network. The pane
 
 Send them this file: [Download ZIP](https://github.com/onkin/smartosa/archive/refs/heads/main.zip). GitHub builds that archive from the repository. There is no separate installer, and camera passwords are not in it.
 
-They unzip the folder and double-click one file:
-
-- macOS: `Start.command`. If the system refuses to open it, right-click the file and choose Open.
-- Windows: `Start.bat`.
+This launcher is for a Mac. Unzip the folder and double-click `Start.command`. If the system refuses to open it, right-click the file and choose Open.
 
 The first start needs internet. It downloads Node.js, project files, and go2rtc, then opens the panel in the browser. That can take several minutes. The black window must stay open.
 
