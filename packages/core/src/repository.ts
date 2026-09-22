@@ -1,4 +1,4 @@
-import type {CameraWall, Device, HomeAccount, HomeSnapshot, NetworkSettings, NewVisit, Visit} from './types';
+import type {CameraWall, Device, FrameChange, HomeAccount, HomeSnapshot, NetworkSettings, NewVisit, Visit} from './types';
 
 export type HomeRepository = {
   listHomes(): Promise<HomeAccount[]>;
@@ -20,6 +20,10 @@ export type HomeRepository = {
 
   listVisits(limit?: number): Promise<Visit[]>;
   logVisit(visit: NewVisit): Promise<Visit>;
+
+  listFrameChanges(limit?: number): Promise<FrameChange[]>;
+  addFrameChange(change: Omit<FrameChange, 'id'> & {id?: string}): Promise<FrameChange>;
+  deleteFrameChange(id: string): Promise<void>;
 
   getSettings(): Promise<NetworkSettings>;
   setSettings(settings: NetworkSettings): Promise<NetworkSettings>;

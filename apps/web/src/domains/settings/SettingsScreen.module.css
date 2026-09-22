@@ -43,6 +43,27 @@
   color: var(--so-color-secondary);
 }
 
+.pin {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.pin span {
+  display: grid;
+  gap: 2px;
+}
+
+.pin strong {
+  color: var(--so-color-title);
+}
+
+.pin small {
+  color: var(--so-color-muted);
+  font-size: 13px;
+  line-height: 1.4;
+}
+
 .import {
   display: inline-flex;
   align-items: center;

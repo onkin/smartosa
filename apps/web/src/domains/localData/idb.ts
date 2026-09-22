@@ -1,9 +1,10 @@
 const DB_NAME = 'smartosa';
-export const SMARTOSA_IDB_VERSION = 3;
+export const SMARTOSA_IDB_VERSION = 4;
 
 export const DEVICES_STORE = 'devices';
 export const WALLS_STORE = 'walls';
 export const VISITS_STORE = 'visits';
+export const CHANGES_STORE = 'changes';
 export const SETTINGS_STORE = 'settings';
 export const HOMES_STORE = 'homes';
 export const ACTIVE_HOME_KEY = 'active-home';
@@ -53,6 +54,7 @@ export function openHomeDb(): Promise<IDBDatabase> {
       ensureStore(db, DEVICES_STORE, 'updatedAt');
       ensureStore(db, WALLS_STORE, 'updatedAt');
       ensureStore(db, VISITS_STORE, 'at');
+      ensureStore(db, CHANGES_STORE, 'updatedAt');
       ensureStore(db, SETTINGS_STORE);
       ensureStore(db, HOMES_STORE);
       if (!tx || event.oldVersion === 0) {

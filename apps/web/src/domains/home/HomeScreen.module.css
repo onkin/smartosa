@@ -77,6 +77,95 @@
   margin-top: var(--so-spacing-2xl);
 }
 
+.watchNote {
+  margin: 0;
+  color: var(--so-color-muted);
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.changes {
+  display: grid;
+  gap: 20px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.changeHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.changeHead a {
+  min-width: 0;
+  color: inherit;
+  text-decoration: none;
+}
+
+.changeHead a:hover strong {
+  color: var(--so-color-primary-strong);
+}
+
+.changeHead strong {
+  color: var(--so-color-title);
+}
+
+.changeHead time {
+  color: var(--so-color-muted);
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.changeMeta {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 10px;
+}
+
+.pair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.pair figure {
+  margin: 0;
+}
+
+.shot {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--so-radius-md);
+  background: #000;
+}
+
+.pair img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.mark {
+  position: absolute;
+  box-sizing: border-box;
+  border: 2px solid #f5c542;
+  border-radius: 4px;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.72);
+  pointer-events: none;
+}
+
+.pair figcaption {
+  margin-top: 4px;
+  color: var(--so-color-muted);
+  font-size: 12px;
+}
+
 .sectionHead {
   display: flex;
   align-items: center;

@@ -1,6 +1,7 @@
 'use client';
 
 import {useAppVisitOnce, useHomeData} from '@/domains/shell';
+import {FrameChangeCard} from './FrameChangeCard';
 import {Button, Card, EmptyState, KindMark, PageHeader, type MarkKind} from '@/domains/ui';
 import {WallBoard} from '@/domains/wall';
 import {popularTargets, type Device, type PopularTarget} from '@smartosa/core';
@@ -39,7 +40,7 @@ function timesLabel(count: number): string {
 }
 
 export function HomeScreen() {
-  const {ready, devices, walls, visits, settings} = useHomeData();
+  const {ready, devices, walls, visits, frameChanges, settings, go2rtcOnline, removeFrameChange} = useHomeData();
   useAppVisitOnce();
   const popular = popularTargets(
     visits.filter((visit) => {
@@ -98,6 +99,28 @@ export function HomeScreen() {
           </ol>
         )}
       </Card>
+      {settings.watchFrames || frameChanges.length > 0 ? (
+        <section className={styles.section}>
+          <Card>
+            <h2>Изменения кадра</h2>
+            {frameChanges.length === 0 ? (
+              <p className={styles.watchNote}>
+                {go2rtcOnline === false
+                  ? 'go2rtc не отвечает, кадры пока не сравниваются.'
+                  : 'Пока изменений нет. Слежение идёт, пока открыта эта панель.'}
+              </p>
+            ) : (
+              <ol className={styles.changes}>
+                {frameChanges.map((change) => (
+                  <li key={change.id}>
+                    <FrameChangeCard change={change} onDelete={(id) => void removeFrameChange(id)} />
+                  </li>
+                ))}
+              </ol>
+            )}
+          </Card>
+        </section>
+      ) : null}
       {pinned.map((wall) => (
         <section className={styles.section} key={wall.id}>
           <div className={styles.sectionHead}>

@@ -54,12 +54,30 @@ export function SettingsScreen() {
     setMessage('Дом удалён');
   }
 
+  async function onToggleWatch(checked: boolean) {
+    await repo.setSettings({
+      lanHost: settings.lanHost,
+      wanHost: settings.wanHost,
+      go2rtcUrl: settings.go2rtcUrl,
+      ...(settings.routerHost ? {routerHost: settings.routerHost} : {}),
+      ...(settings.routerUser ? {routerUser: settings.routerUser} : {}),
+      ...(settings.routerPassword ? {routerPassword: settings.routerPassword} : {}),
+      ...(checked ? {watchFrames: true} : {}),
+    });
+    await reload();
+    setMessage(checked ? 'Слежение включено' : 'Слежение выключено');
+  }
+
   async function onSaveNetwork(event: FormEvent) {
     event.preventDefault();
     await repo.setSettings({
       lanHost: lanHost.trim(),
       wanHost: wanHost.trim(),
       go2rtcUrl: go2rtcUrl.trim() || 'http://127.0.0.1:1984',
+      ...(settings.watchFrames ? {watchFrames: true} : {}),
+      ...(settings.routerHost ? {routerHost: settings.routerHost} : {}),
+      ...(settings.routerUser ? {routerUser: settings.routerUser} : {}),
+      ...(settings.routerPassword ? {routerPassword: settings.routerPassword} : {}),
     });
     await reload();
     setMessage('Сеть сохранена');
@@ -139,6 +157,27 @@ export function SettingsScreen() {
               ) : null}
             </div>
           </form>
+        </Card>
+        <Card>
+          <div className={styles.blockHead}>
+            <h2>Слежение за кадром</h2>
+            <p>
+              Пока эта вкладка открыта, панель сравнивает кадры камер через go2rtc. Если картинка изменилась и
+              осталась такой, на главной появятся время и два снимка: до и после. Это изменение картинки, без
+              имени предмета. Когда компьютер спит или вкладка закрыта, запись останавливается.
+            </p>
+          </div>
+          <label className={styles.pin}>
+            <input
+              checked={settings.watchFrames === true}
+              onChange={(event) => void onToggleWatch(event.target.checked)}
+              type="checkbox"
+            />
+            <span>
+              <strong>Следить, пока панель открыта</strong>
+              <small>Нужен запущенный go2rtc. Журнал хранится в этом браузере и в JSON-копию не входит.</small>
+            </span>
+          </label>
         </Card>
         <Card>
           <div className={styles.blockHead}>

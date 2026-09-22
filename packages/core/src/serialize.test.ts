@@ -30,6 +30,20 @@ describe('serialize', () => {
     expect(parsed).toEqual(snapshot);
   });
 
+  it('leaves the router password out of a backup', () => {
+    const snapshot = {
+      version: SNAPSHOT_VERSION,
+      devices: [],
+      walls: [],
+      visits: [],
+      settings: {...createDefaultSettings(), routerHost: '192.168.1.1', routerUser: 'admin', routerPassword: 'secret'},
+    };
+    const raw = serializeSnapshot(snapshot);
+    expect(raw).not.toContain('secret');
+    expect(parseSnapshot(raw).settings.routerPassword).toBeUndefined();
+    expect(parseSnapshot(raw).settings.routerHost).toBe('192.168.1.1');
+  });
+
   it('rejects an unknown version', () => {
     expect(() => parseSnapshot(JSON.stringify({version: 99, devices: [], walls: [], visits: []}))).toThrow(
       /Unsupported snapshot version/,

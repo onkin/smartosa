@@ -16,6 +16,9 @@ export function DeviceListScreen() {
       <PageHeader
         actions={
           <>
+            <Button href="/devices/discover" variant="ghost">
+              Найти в сети
+            </Button>
             <Button href="/devices/edit?kind=camera">
               <KindMark kind="camera" label={false} /> Камера
             </Button>

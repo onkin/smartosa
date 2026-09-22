@@ -3,6 +3,7 @@
 export {CameraSessionProvider} from './CameraSession';
 export {CameraTile} from './CameraTile';
 export {DeviceCard} from './DeviceCard';
+export {DeviceDiscoverScreen} from './DeviceDiscoverScreen';
 export {DeviceEditScreen} from './DeviceEditScreen';
 export {DeviceViewScreen} from './DeviceViewScreen';
 export {DeviceListScreen} from './DeviceListScreen';

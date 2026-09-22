@@ -77,6 +77,20 @@ export type NetworkSettings = {
   lanHost: string;
   wanHost: string;
   go2rtcUrl: string;
+  watchFrames?: boolean;
+  routerHost?: string;
+  routerUser?: string;
+  routerPassword?: string;
+};
+
+export type FrameChange = {
+  id: string;
+  at: number;
+  deviceId: string;
+  deviceName: string;
+  before: string;
+  after: string;
+  box?: {x: number; y: number; w: number; h: number};
 };
 
 export type HomeSnapshot = {

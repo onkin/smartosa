@@ -1,0 +1,63 @@
+.form {
+  display: grid;
+  gap: var(--so-spacing-lg);
+  max-width: 520px;
+}
+
+.pin {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  color: var(--so-color-text);
+  line-height: 1.4;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--so-spacing-sm);
+}
+
+.message {
+  margin: var(--so-spacing-lg) 0 0;
+  color: var(--so-color-muted);
+  line-height: 1.45;
+}
+
+.results {
+  display: grid;
+  gap: var(--so-spacing-lg);
+  margin-top: var(--so-spacing-xl);
+}
+
+.list {
+  display: grid;
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.device {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--so-color-border);
+}
+
+.device span {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.device strong {
+  color: var(--so-color-title);
+}
+
+.device small {
+  color: var(--so-color-muted);
+  font-size: 13px;
+  line-height: 1.4;
+}

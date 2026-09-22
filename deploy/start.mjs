@@ -1,3 +1,4 @@
+import {handleDiscover} from './discover.mjs';
 import {spawn, spawnSync} from 'node:child_process';
 import {createReadStream, existsSync, statSync} from 'node:fs';
 import {createServer} from 'node:http';
@@ -108,6 +109,11 @@ if (!existsSync(path.join(webRoot, 'index.html'))) {
 }
 
 const server = createServer((request, response) => {
+  const pathName = (request.url ?? '/').split('?')[0];
+  if (pathName === '/api/discover') {
+    handleDiscover(request, response);
+    return;
+  }
   const file = fileFor(request.url ?? '/');
   if (!file) {
     response.writeHead(404);

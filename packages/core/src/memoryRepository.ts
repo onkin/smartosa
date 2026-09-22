@@ -1,8 +1,8 @@
-import {createDefaultSettings, createSeedDevices, VISIT_LIMIT} from './defaults';
+import {createDefaultSettings, createSeedDevices, FRAME_CHANGE_LIMIT, VISIT_LIMIT} from './defaults';
 import {createId} from './ids';
 import {parseSnapshot} from './serialize';
 import type {HomeRepository} from './repository';
-import type {CameraWall, Device, HomeAccount, HomeSnapshot, NetworkSettings, NewVisit, Visit} from './types';
+import type {CameraWall, Device, FrameChange, HomeAccount, HomeSnapshot, NetworkSettings, NewVisit, Visit} from './types';
 import {SNAPSHOT_VERSION} from './types';
 
 export type MemoryRepositoryOptions = {
@@ -14,6 +14,7 @@ type Bucket = {
   devices: Map<string, Device>;
   walls: Map<string, CameraWall>;
   visits: Visit[];
+  changes: FrameChange[];
   settings: NetworkSettings;
 };
 
@@ -22,6 +23,7 @@ function emptyBucket(seed: Device[]): Bucket {
     devices: new Map(seed.map((device) => [device.id, device])),
     walls: new Map(),
     visits: [],
+    changes: [],
     settings: createDefaultSettings(),
   };
 }
@@ -144,6 +146,27 @@ export function createMemoryRepository(options: MemoryRepositoryOptions = {}): H
       current.visits = [visit, ...current.visits].slice(0, VISIT_LIMIT);
       return visit;
     },
+    async listFrameChanges(limit = FRAME_CHANGE_LIMIT) {
+      return bucket().changes.slice(0, limit);
+    },
+    async addFrameChange(input) {
+      const current = bucket();
+      const change: FrameChange = {
+        id: input.id ?? createId(),
+        at: input.at,
+        deviceId: input.deviceId,
+        deviceName: input.deviceName,
+        before: input.before,
+        after: input.after,
+        ...(input.box ? {box: input.box} : {}),
+      };
+      current.changes = [change, ...current.changes].slice(0, FRAME_CHANGE_LIMIT);
+      return change;
+    },
+    async deleteFrameChange(id) {
+      const current = bucket();
+      current.changes = current.changes.filter((item) => item.id !== id);
+    },
     async getSettings() {
       return bucket().settings;
     },
@@ -167,6 +190,7 @@ export function createMemoryRepository(options: MemoryRepositoryOptions = {}): H
       current.devices = new Map(parsed.devices.map((device) => [device.id, device]));
       current.walls = new Map(parsed.walls.map((wall) => [wall.id, wall]));
       current.visits = [...parsed.visits].sort((a, b) => b.at - a.at).slice(0, VISIT_LIMIT);
+      current.changes = [];
       current.settings = parsed.settings;
     },
   };

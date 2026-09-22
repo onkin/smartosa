@@ -175,6 +175,10 @@ export function parseSettings(raw: unknown): NetworkSettings {
     lanHost: typeof raw.lanHost === 'string' ? raw.lanHost : '',
     wanHost: typeof raw.wanHost === 'string' ? raw.wanHost : defaults.wanHost,
     go2rtcUrl: typeof raw.go2rtcUrl === 'string' && raw.go2rtcUrl ? raw.go2rtcUrl : defaults.go2rtcUrl,
+    ...(raw.watchFrames === true ? {watchFrames: true} : {}),
+    ...(typeof raw.routerHost === 'string' && raw.routerHost ? {routerHost: raw.routerHost} : {}),
+    ...(typeof raw.routerUser === 'string' && raw.routerUser ? {routerUser: raw.routerUser} : {}),
+    ...(typeof raw.routerPassword === 'string' && raw.routerPassword ? {routerPassword: raw.routerPassword} : {}),
   };
 }
 
@@ -211,5 +215,8 @@ export function serializeVisit(visit: Visit): string {
 }
 
 export function serializeSnapshot(snapshot: HomeSnapshot): string {
-  return JSON.stringify(snapshot);
+  const settings = {...snapshot.settings};
+  delete settings.routerUser;
+  delete settings.routerPassword;
+  return JSON.stringify({...snapshot, settings});
 }

@@ -1,6 +1,7 @@
 'use client';
 
 import {CameraSessionProvider} from '@/domains/devices/CameraSession';
+import {FrameWatch} from '@/domains/devices/FrameWatch';
 import {createIndexedDbRepository} from '@/domains/localData';
 import {useMemo, type ReactNode} from 'react';
 import {AppShell} from './AppShell';
@@ -18,6 +19,7 @@ export function AppProviders({children}: Props) {
     <PinGate>
       <HomeDataProvider repo={repo}>
         <CameraSessionProvider>
+          <FrameWatch />
           <AppShell>{children}</AppShell>
         </CameraSessionProvider>
       </HomeDataProvider>

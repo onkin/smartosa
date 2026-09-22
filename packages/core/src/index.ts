@@ -1,4 +1,5 @@
 export * from './defaults';
+export * from './frameDiff';
 export * from './ids';
 export * from './memoryRepository';
 export * from './repository';

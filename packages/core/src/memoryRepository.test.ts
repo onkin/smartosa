@@ -61,15 +61,20 @@ describe('memory repository', () => {
       updatedAt: 1,
     });
     await repo.setSettings({lanHost: '10.0.0.1', wanHost: '1.1.1.1', go2rtcUrl: 'http://127.0.0.1:1984'});
+    await repo.addFrameChange({at: 2, deviceId: 'cam-a', deviceName: 'Дача', before: 'before', after: 'after'});
 
     const second = await repo.createHome('Квартира');
     expect((await repo.activeHome()).id).toBe(second.id);
     expect(await repo.listDevices()).toEqual([]);
     expect((await repo.getSettings()).lanHost).toBe('');
+    expect(await repo.listFrameChanges()).toEqual([]);
 
     await repo.switchHome('home-default');
     expect((await repo.listDevices()).map((item) => item.id)).toEqual(['cam-a']);
     expect((await repo.getSettings()).lanHost).toBe('10.0.0.1');
+    expect((await repo.listFrameChanges())[0]?.deviceName).toBe('Дача');
+    await repo.deleteFrameChange((await repo.listFrameChanges())[0].id);
+    expect(await repo.listFrameChanges()).toEqual([]);
 
     await expect(repo.deleteHome('home-default')).resolves.toBeUndefined();
     await expect(repo.deleteHome(second.id)).rejects.toThrow(/единственный/);

@@ -1,9 +1,11 @@
 'use client';
 
 import {
+  FRAME_CHANGE_LIMIT,
   go2rtcBaseUrl,
   type CameraWall,
   type Device,
+  type FrameChange,
   type HomeAccount,
   type HomeRepository,
   type NetworkSettings,
@@ -19,10 +21,13 @@ export type HomeData = {
   devices: Device[];
   walls: CameraWall[];
   visits: Visit[];
+  frameChanges: FrameChange[];
   settings: NetworkSettings;
   go2rtcOnline: boolean | null;
   repo: HomeRepository;
   reload: () => Promise<void>;
+  publishFrameChange: (change: FrameChange) => void;
+  removeFrameChange: (id: string) => Promise<void>;
 };
 
 const HomeDataContext = createContext<HomeData | null>(null);
@@ -40,6 +45,7 @@ export function HomeDataProvider({repo, children}: Props) {
   const [devices, setDevices] = useState<Device[]>([]);
   const [walls, setWalls] = useState<CameraWall[]>([]);
   const [visits, setVisits] = useState<Visit[]>([]);
+  const [frameChanges, setFrameChanges] = useState<FrameChange[]>([]);
   const [settings, setSettings] = useState<NetworkSettings>({
     lanHost: '',
     wanHost: '',
@@ -49,12 +55,13 @@ export function HomeDataProvider({repo, children}: Props) {
 
   const reload = useCallback(async () => {
     try {
-      const [nextHomes, nextActive, nextDevices, nextWalls, nextVisits, nextSettings] = await Promise.all([
+      const [nextHomes, nextActive, nextDevices, nextWalls, nextVisits, nextChanges, nextSettings] = await Promise.all([
         repo.listHomes(),
         repo.activeHome(),
         repo.listDevices(),
         repo.listWalls(),
         repo.listVisits(200),
+        repo.listFrameChanges(),
         repo.getSettings(),
       ]);
       setHomes(nextHomes);
@@ -62,6 +69,7 @@ export function HomeDataProvider({repo, children}: Props) {
       setDevices(nextDevices);
       setWalls(nextWalls);
       setVisits(nextVisits);
+      setFrameChanges(nextChanges);
       setSettings(nextSettings);
       setError(null);
       setReady(true);
@@ -70,6 +78,18 @@ export function HomeDataProvider({repo, children}: Props) {
       setReady(true);
     }
   }, [repo]);
+
+  const publishFrameChange = useCallback((change: FrameChange) => {
+    setFrameChanges((current) => [change, ...current.filter((item) => item.id !== change.id)].slice(0, FRAME_CHANGE_LIMIT));
+  }, []);
+
+  const removeFrameChange = useCallback(
+    async (id: string) => {
+      await repo.deleteFrameChange(id);
+      setFrameChanges((current) => current.filter((item) => item.id !== id));
+    },
+    [repo],
+  );
 
   useEffect(() => {
     void reload();
@@ -109,8 +129,38 @@ export function HomeDataProvider({repo, children}: Props) {
   }, [settings]);
 
   const value = useMemo(
-    () => ({ready, error, homes, activeHome, devices, walls, visits, settings, go2rtcOnline, repo, reload}),
-    [ready, error, homes, activeHome, devices, walls, visits, settings, go2rtcOnline, repo, reload],
+    () => ({
+      ready,
+      error,
+      homes,
+      activeHome,
+      devices,
+      walls,
+      visits,
+      frameChanges,
+      settings,
+      go2rtcOnline,
+      repo,
+      reload,
+      publishFrameChange,
+      removeFrameChange,
+    }),
+    [
+      ready,
+      error,
+      homes,
+      activeHome,
+      devices,
+      walls,
+      visits,
+      frameChanges,
+      settings,
+      go2rtcOnline,
+      repo,
+      reload,
+      publishFrameChange,
+      removeFrameChange,
+    ],
   );
 
   return <HomeDataContext.Provider value={value}>{children}</HomeDataContext.Provider>;

@@ -6,7 +6,7 @@
     "lint": "pnpm nx run-many --target=lint --all --parallel",
     "typecheck": "pnpm nx run-many --target=typecheck --all --parallel",
     "test": "pnpm nx run-many --target=test --all --parallel",
-    "web:dev": "pnpm --filter web dev",
+    "web:dev": "node deploy/dev.mjs",
     "web:build": "pnpm --filter web build && rm -rf dist/apps/web && mkdir -p dist/apps/web && cp -R apps/web/out/. dist/apps/web/",
     "web:start": "pnpm --filter web start",
     "web:nx": "pnpm nx run web:serve",

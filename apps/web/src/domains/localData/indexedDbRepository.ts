@@ -10,7 +10,9 @@ import {
   serializeDevice,
   serializeVisit,
   serializeWall,
+  FRAME_CHANGE_LIMIT,
   VISIT_LIMIT,
+  type FrameChange,
   type HomeAccount,
   type HomeRepository,
   type HomeSnapshot,
@@ -21,6 +23,7 @@ import {
 } from '@smartosa/core';
 import {
   ACTIVE_HOME_KEY,
+  CHANGES_STORE,
   DEVICES_STORE,
   HOMES_STORE,
   SETTINGS_STORE,
@@ -35,6 +38,45 @@ const NETWORK_KEY = 'network';
 
 function scopeKey(homeId: string, id: string): string {
   return `${homeId}:${id}`;
+}
+
+function parseFrameBox(raw: FrameChange['box']): FrameChange['box'] | undefined {
+  if (!raw) {
+    return undefined;
+  }
+  const values = [raw.x, raw.y, raw.w, raw.h];
+  if (values.some((value) => typeof value !== 'number' || !Number.isFinite(value))) {
+    return undefined;
+  }
+  return {x: raw.x, y: raw.y, w: raw.w, h: raw.h};
+}
+
+function parseFrameChange(payload: string): FrameChange | null {
+  try {
+    const raw = JSON.parse(payload) as Partial<FrameChange>;
+    if (
+      typeof raw.id !== 'string' ||
+      typeof raw.at !== 'number' ||
+      typeof raw.deviceId !== 'string' ||
+      typeof raw.deviceName !== 'string' ||
+      typeof raw.before !== 'string' ||
+      typeof raw.after !== 'string'
+    ) {
+      return null;
+    }
+    const box = parseFrameBox(raw.box);
+    return {
+      id: raw.id,
+      at: raw.at,
+      deviceId: raw.deviceId,
+      deviceName: raw.deviceName,
+      before: raw.before,
+      after: raw.after,
+      ...(box ? {box} : {}),
+    };
+  } catch {
+    return null;
+  }
 }
 
 async function getAll<T>(storeName: string): Promise<T[]> {
@@ -216,6 +258,7 @@ export function createIndexedDbRepository(): HomeRepository {
       await deleteScoped(DEVICES_STORE, id);
       await deleteScoped(WALLS_STORE, id);
       await deleteScoped(VISITS_STORE, id);
+      await deleteScoped(CHANGES_STORE, id);
       await deletePayload(SETTINGS_STORE, scopeKey(id, NETWORK_KEY));
       await deletePayload(HOMES_STORE, id);
       if ((await readActiveId()) === id) {
@@ -326,6 +369,39 @@ export function createIndexedDbRepository(): HomeRepository {
       await Promise.all(extras.map((item) => deletePayload(VISITS_STORE, scopeKey(homeId, item.id))));
       return visit;
     },
+    async listFrameChanges(limit = FRAME_CHANGE_LIMIT) {
+      const homeId = await requireActiveId();
+      const rows = await scopedRows(CHANGES_STORE, homeId);
+      return rows
+        .map((row) => parseFrameChange(row.payload))
+        .filter((item): item is FrameChange => item !== null)
+        .sort((a, b) => b.at - a.at)
+        .slice(0, limit);
+    },
+    async addFrameChange(input) {
+      const homeId = await requireActiveId();
+      const change: FrameChange = {
+        id: input.id ?? createId(),
+        at: input.at,
+        deviceId: input.deviceId,
+        deviceName: input.deviceName,
+        before: input.before,
+        after: input.after,
+        ...(input.box ? {box: input.box} : {}),
+      };
+      await putPayload(CHANGES_STORE, {
+        id: scopeKey(homeId, change.id),
+        payload: JSON.stringify(change),
+        updatedAt: change.at,
+      });
+      const extras = (await repo.listFrameChanges(FRAME_CHANGE_LIMIT + 20)).slice(FRAME_CHANGE_LIMIT);
+      await Promise.all(extras.map((item) => deletePayload(CHANGES_STORE, scopeKey(homeId, item.id))));
+      return change;
+    },
+    async deleteFrameChange(id) {
+      const homeId = await requireActiveId();
+      await deletePayload(CHANGES_STORE, scopeKey(homeId, id));
+    },
     async getSettings() {
       const homeId = await requireActiveId();
       const db = await openHomeDb();
@@ -361,6 +437,7 @@ export function createIndexedDbRepository(): HomeRepository {
       await deleteScoped(DEVICES_STORE, homeId);
       await deleteScoped(WALLS_STORE, homeId);
       await deleteScoped(VISITS_STORE, homeId);
+      await deleteScoped(CHANGES_STORE, homeId);
       for (const device of parsed.devices) {
         await putPayload(DEVICES_STORE, {
           id: scopeKey(homeId, device.id),
